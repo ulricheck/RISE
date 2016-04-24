@@ -85,15 +85,13 @@ function markupSlides(container) {
     var content_on_slide1 = false;
 
     var cells = IPython.notebook.get_cells();
-    var i, cell, slide_meta, slide_type, slide_background, slide_header, slide_footer;
+    var i, cell, slide_meta, slide_type, slide_background;
 
     for (i=0; i < cells.length; i++) {
         cell = cells[i];
         slide_meta = cell.metadata.slideshow || {};
         slide_type = slide_meta.slide_type;
-        slide_background = slide_meta.background_image;
-        slide_header = slide_meta.header_image;
-        slide_footer = slide_meta.footer_image;
+        slide_background = default_config.background_image || slide_meta.background_image;
         //~ console.log('cell ' + i + ' is: '+ slide_type);
 
         if (content_on_slide1) {
