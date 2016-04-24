@@ -85,11 +85,15 @@ function markupSlides(container) {
     var content_on_slide1 = false;
 
     var cells = IPython.notebook.get_cells();
-    var i, cell, slide_type;
+    var i, cell, slide_meta, slide_type, slide_background, slide_header, slide_footer;
 
     for (i=0; i < cells.length; i++) {
         cell = cells[i];
-        slide_type = (cell.metadata.slideshow || {}).slide_type;
+        slide_meta = cell.metadata.slideshow || {};
+        slide_type = slide_meta.slide_type;
+        slide_background = slide_meta.background_image;
+        slide_header = slide_meta.header_image;
+        slide_footer = slide_meta.footer_image;
         //~ console.log('cell ' + i + ' is: '+ slide_type);
 
         if (content_on_slide1) {
@@ -131,6 +135,12 @@ function markupSlides(container) {
         if (slide_type === 'skip') {
             cell.element.addClass('reveal-skip');
         }
+
+        if (typeof slide_background !== 'undefined') {
+            subslide_section.attr('data-background', slide_background);
+            subslide_section.attr('data-background-size', '100% 100%');
+            subslide_section.attr('data-background-position', '0 0');
+        }
     }
 
     // Put .end_space back at the end after all the rearrangement
@@ -159,8 +169,8 @@ function setStartingSlide(selected) {
 function Revealer() {
   $('body').addClass("rise-enabled");
   // Prepare the DOM to start the slideshow
-  //$('div#header').hide();
-  //$('div#site').css("height", "100%");
+  $('div#header').hide();
+  $('div#site').css("height", "100%");
   //$('div#ipython-main-app').css("position", "static");
   // Set up the scrolling feature
   var scroll = config.get_sync('scroll');
@@ -431,6 +441,7 @@ function revealMode() {
     $('#exit_b').remove();
     $('#help_b').remove();
     $('#maintoolbar').removeClass('reveal_tagging');
+    $('div#header').show();
     // Workaround... should be a better solution. Need to investigate codemirror
     fixCellHeight();
   }
